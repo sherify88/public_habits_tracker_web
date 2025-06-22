@@ -1,5 +1,6 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from './contexts/AuthContext';
 import Routes from "./Routes";
 
 export const isIPhone = /iPhone/i.test(navigator.userAgent);
@@ -18,7 +19,9 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Routes />
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

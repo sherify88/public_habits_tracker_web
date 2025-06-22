@@ -73,25 +73,35 @@ describe('habitsApi', () => {
             expect(result).toEqual([mockHabit]);
         });
 
-        it('returns empty array on 404 error', async () => {
-            const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-            const axiosError = new AxiosError();
-            axiosError.response = { status: 404 } as any;
-            mockedAxios.get.mockRejectedValueOnce(axiosError);
+        it('returns an empty array on 404 error', async () => {
+            const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+            try {
+                // Create a proper AxiosError for the mock
+                const error = new AxiosError('Request failed with status code 404');
+                error.response = {
+                    status: 404,
+                    data: 'Not Found',
+                    statusText: 'Not Found',
+                    headers: {},
+                    config: {} as any,
+                };
+                mockedAxios.get.mockRejectedValue(error);
 
-            const result = await habitsApi.getHabits();
-
-            expect(result).toEqual([]);
-            consoleSpy.mockRestore();
+                const habits = await habitsApi.getHabits();
+                expect(habits).toEqual([]);
+            } finally {
+                consoleErrorSpy.mockRestore();
+            }
         });
 
-        it('throws error on other failures', async () => {
-            const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-            const error = new Error('Network error');
-            mockedAxios.get.mockRejectedValueOnce(error);
-
-            await expect(habitsApi.getHabits()).rejects.toThrow('Network error');
-            consoleSpy.mockRestore();
+        it('throws other errors', async () => {
+            const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+            try {
+                mockedAxios.get.mockRejectedValue(new Error('Network error'));
+                await expect(habitsApi.getHabits()).rejects.toThrow('Network error');
+            } finally {
+                consoleErrorSpy.mockRestore();
+            }
         });
     });
 

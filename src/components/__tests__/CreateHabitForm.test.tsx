@@ -212,6 +212,9 @@ describe('CreateHabitForm', () => {
             const error = new Error('Creation failed');
             mockMutateAsync.mockRejectedValueOnce(error);
 
+            // Suppress console.error for this specific test
+            const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
             render(<CreateHabitForm {...defaultProps} />);
 
             const nameInput = screen.getByLabelText('Habit Name *');
@@ -226,6 +229,8 @@ describe('CreateHabitForm', () => {
 
             // Form should not close on error
             expect(mockOnClose).not.toHaveBeenCalled();
+
+            consoleErrorSpy.mockRestore();
         });
 
         it('clears form after successful submission', async () => {
@@ -304,17 +309,21 @@ describe('CreateHabitForm', () => {
     });
 
     describe('Error display', () => {
-        it('displays API error message', () => {
+        it('displays API error message', async () => {
+            // Mock the mutation to be in an error state
             mockUseCreateHabit.mockReturnValue({
                 mutateAsync: mockMutateAsync,
                 isPending: false,
                 isError: true,
-                error: { message: 'API Error' } as any
+                error: new Error('A habit with this name already exists.') // Simulate a specific error
             });
 
             render(<CreateHabitForm {...defaultProps} />);
 
-            expect(screen.getByText('Failed to create habit. Please try again.')).toBeInTheDocument();
+            // The form should now display the specific error message from the hook
+            await waitFor(() => {
+                expect(screen.getByText('A habit with this name already exists.')).toBeInTheDocument();
+            });
         });
     });
 }); 

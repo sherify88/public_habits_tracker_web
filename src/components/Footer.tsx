@@ -1,4 +1,5 @@
 import React from 'react';
+import { APP_VERSION } from '../config/version';
 
 const Footer: React.FC = () => {
     const currentYear = new Date().getFullYear();
@@ -17,6 +18,7 @@ const Footer: React.FC = () => {
                 </div>
                 <div className="text-gray-500">
                     <p>&copy; {currentYear} Habits Tracker. All rights reserved.</p>
+                    <p className="text-xs mt-1">Version {APP_VERSION}</p>
                 </div>
             </div>
         </footer>

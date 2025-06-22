@@ -17,19 +17,7 @@ const CreateHabitForm: React.FC<CreateHabitFormProps> = ({ onClose }) => {
         e.preventDefault();
 
         // Validation
-        const newErrors: { name?: string; description?: string } = {};
-
-        if (!name.trim()) {
-            newErrors.name = 'Habit name is required';
-        } else if (name.trim().length < 3) {
-            newErrors.name = 'Habit name must be at least 3 characters';
-        } else if (name.trim().length > 100) {
-            newErrors.name = 'Habit name must be less than 100 characters';
-        }
-
-        if (description.trim().length > 500) {
-            newErrors.description = 'Description must be less than 500 characters';
-        }
+        const newErrors = validate(name, description);
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -104,6 +92,24 @@ const CreateHabitForm: React.FC<CreateHabitFormProps> = ({ onClose }) => {
             handleSubmit(e as any);
         }
     }, [handleSubmit]);
+
+    const validate = (name: string, description?: string) => {
+        const newErrors: { name?: string; description?: string } = {};
+
+        if (!name.trim()) {
+            newErrors.name = 'Habit name is required';
+        } else if (name.trim().length < 3) {
+            newErrors.name = 'Habit name must be at least 3 characters';
+        } else if (name.trim().length > 100) {
+            newErrors.name = 'Habit name must be less than 100 characters';
+        }
+
+        if (description && description.length > 500) {
+            newErrors.description = 'Description must be less than 500 characters';
+        }
+
+        return newErrors;
+    };
 
     return (
         <div className="modal-overlay" data-testid="form-overlay" onClick={handleOverlayClick}>

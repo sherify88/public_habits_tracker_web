@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { API_CONFIG } from '../config/api';
+import { tokenUtils } from './authApi';
 import {
     Habit,
     CreateHabitRequest,
@@ -16,6 +17,15 @@ import {
 const HABITS_ENDPOINT = `${API_CONFIG.BASE_URL}/habits`;
 const STATS_ENDPOINT = `${HABITS_ENDPOINT}/stats`;
 const COMPLETIONS_ENDPOINT = `${API_CONFIG.BASE_URL}/completions`;
+
+// Helper function to get headers with auth token
+const getAuthHeaders = () => {
+    const token = tokenUtils.getToken();
+    return {
+        ...API_CONFIG.DEFAULT_HEADERS,
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
 
 // Query keys
 export const habitKeys = {
@@ -43,7 +53,7 @@ export const habitsApi = {
         try {
             const response = await axios.get<HabitsResponse | Habit[]>(HABITS_ENDPOINT, {
                 timeout: API_CONFIG.TIMEOUT,
-                headers: API_CONFIG.DEFAULT_HEADERS,
+                headers: getAuthHeaders(),
             });
             // Handle both {habits: []} and [] response shapes
             if (Array.isArray(response.data)) {
@@ -64,7 +74,7 @@ export const habitsApi = {
         try {
             const response = await axios.post<Habit>(HABITS_ENDPOINT, habitData, {
                 timeout: API_CONFIG.TIMEOUT,
-                headers: API_CONFIG.DEFAULT_HEADERS,
+                headers: getAuthHeaders(),
             });
             return response.data;
         } catch (error) {
@@ -81,14 +91,14 @@ export const habitsApi = {
     deleteHabit: async (id: number): Promise<void> => {
         await axios.delete(`${HABITS_ENDPOINT}/${id}`, {
             timeout: API_CONFIG.TIMEOUT,
-            headers: API_CONFIG.DEFAULT_HEADERS,
+            headers: getAuthHeaders(),
         });
     },
 
     getHabitStats: async (): Promise<HabitStatsResponse> => {
         const response = await axios.get<HabitStatsResponse>(STATS_ENDPOINT, {
             timeout: API_CONFIG.TIMEOUT,
-            headers: API_CONFIG.DEFAULT_HEADERS,
+            headers: getAuthHeaders(),
         });
         return response.data;
     },
@@ -100,7 +110,7 @@ export const habitsApi = {
             { completed }, // Body contains only the 'completed' boolean
             {
                 timeout: API_CONFIG.TIMEOUT,
-                headers: API_CONFIG.DEFAULT_HEADERS,
+                headers: getAuthHeaders(),
             }
         );
         return response.data;
@@ -108,17 +118,19 @@ export const habitsApi = {
 };
 
 // React Query hooks
-export const useHabits = () => {
+export const useHabits = (enabled: boolean = true) => {
     return useQuery({
         queryKey: habitKeys.lists(),
         queryFn: habitsApi.getHabits,
+        enabled,
     });
 };
 
-export const useHabitStats = () => {
+export const useHabitStats = (enabled: boolean = true) => {
     return useQuery({
         queryKey: statsKeys.all,
         queryFn: habitsApi.getHabitStats,
+        enabled,
     });
 };
 

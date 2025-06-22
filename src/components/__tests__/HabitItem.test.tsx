@@ -59,6 +59,20 @@ describe('HabitItem', () => {
             expect(screen.getByText(/Created:/)).toBeInTheDocument();
         });
 
+        it('displays the current streak when it is greater than zero', () => {
+            const habitWithStreak = { ...mockHabit, currentStreak: 5 };
+            render(<HabitItem {...defaultProps} habit={habitWithStreak} />);
+
+            expect(screen.getByText(/5 day streak/i)).toBeInTheDocument();
+        });
+
+        it('does not display the current streak when it is zero', () => {
+            const habitWithoutStreak = { ...mockHabit, currentStreak: 0 };
+            render(<HabitItem {...defaultProps} habit={habitWithoutStreak} />);
+
+            expect(screen.queryByText(/day streak/i)).not.toBeInTheDocument();
+        });
+
         it('shows "Not done" status when habit is not completed', () => {
             render(<HabitItem {...defaultProps} />);
 

@@ -74,10 +74,19 @@ const HabitItem: React.FC<HabitItemProps> = ({
                     <p className="text-gray-500 my-2 leading-relaxed">{habit.description}</p>
                 )}
 
-                <div className="text-sm text-gray-400">
+                <div className="flex items-center justify-between mt-2 text-sm text-gray-400">
                     <span>
                         Created: {formatDate(habit.createdDate)}
                     </span>
+                    {habit.currentStreak > 0 && (
+                        <span className="flex items-center font-medium text-orange-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 12c2 -2.96 0 -7 -1 -8c-1.492 0 -2.993 1.42 -4 4c-1.007 2.58 -1.5 5.5 -1 8c.493 2.493 2.993 4 5 4c2.007 0 4.507 -1.507 5 -4c.493 -2.507 0 -5 -1 -8c-1.007 -3 2 -4 3 -4" />
+                            </svg>
+                            {habit.currentStreak} day streak
+                        </span>
+                    )}
                 </div>
             </div>
 

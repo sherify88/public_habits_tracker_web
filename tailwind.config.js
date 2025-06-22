@@ -64,16 +64,6 @@ module.exports = {
         indigo: { 50: "#e2e8f0" },
       },
       fontFamily: {
-        madaniarabiclight: "MadaniArabic-Light",
-        madaniarabicblack: "MadaniArabic-Black",
-        madaniarabicmedium: "MadaniArabic-Medium",
-        madaniarabicsemibold: "MadaniArabic-SemiBold",
-        madaniarabicextrabold: "MadaniArabic-ExtraBold",
-        madaniarabicextralight: "MadaniArabic-ExtraLight",
-        ibmplexsansarabic: "IBMPlexSansArabicMedium",
-        madaniarabicbold: "MadaniArabic-Bold",
-        helveticaneueltarabic: "Helvetica Neue LT Arabic",
-        madaniarabicregular: "MadaniArabic-Regular",
         dinnextltw: "DIN Next LT W23",
       },
       boxShadow: {
