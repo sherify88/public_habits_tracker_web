@@ -2,13 +2,15 @@
 
 A simple and modern web application to help you track your daily habits and build consistency.
 
+**GitHub Repository**: [https://github.com/sherify88/public_habits_tracker_web]
+
 ---
 
 ## 🚀 Live Demo
 
 You can try out the live version of the application here:
 
--   **URL**: [https://web.habits.awesome-posts.com/habits](https://web.habits.awesome-posts.com)
+-   **URL**: [https://web.habits.awesome-posts.com/]
 -   **Username**: `testuser`
 -   **Password**: `password123`
 
